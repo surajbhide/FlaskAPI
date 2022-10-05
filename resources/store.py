@@ -28,7 +28,7 @@ class StoreList(MethodView):
         except SQLAlchemyError:
             abort(500, message="Error inserting store.")
         
-        return store
+        return new_store
     
 @blp.route("/store/<string:store_id>")
 class Store(MethodView):
