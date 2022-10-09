@@ -1,8 +1,8 @@
 from email import message
-import uuid
-from flask import request
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
+from flask_jwt_extended import jwt_required
+
 from models.store import StoreModel
 from schemas import StoreSchema
 from db import db
@@ -16,10 +16,12 @@ class StoreList(MethodView):
     def get(self):
         return StoreModel.query.all()
     
+    @jwt_required()
     @blp.arguments(StoreSchema())
     @blp.response(201, StoreSchema)
     def post(self, store):
         new_store = StoreModel(**store)
+        print(f"**** {new_store}")
         try:
             db.session.add(new_store)
             db.session.commit()
@@ -27,16 +29,17 @@ class StoreList(MethodView):
             abort(400, message="A store with that name already exists.")
         except SQLAlchemyError:
             abort(500, message="Error inserting store.")
-        
+        print(new_store)
         return new_store
     
-@blp.route("/store/<string:store_id>")
+@blp.route("/store/<int:store_id>")
 class Store(MethodView):
     @blp.response(200, StoreSchema)
     def get(self, store_id):
         store = StoreModel.query.get_or_404(store_id)
         return store
     
+    @jwt_required()
     def delete(self, store_id):
         store = StoreModel.query.get_or_404(store_id)
         db.session.delete(store)
