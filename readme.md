@@ -6,6 +6,8 @@ https://git-workshop.tecladocode.com/
 ## docker commands
 docker build -t rest-api-flask-python . 
 docker run -dp 5000:5000 -w /app -v "${PWD}:/app" rest-api-flask-python
+OR
+docker run -dp 5000:5000 -w /app -v "${PWD}:/app" rest-api-flask-python sh -c "flask run"
 
 ## alembic migration commands.
 flask db init
