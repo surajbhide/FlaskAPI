@@ -33,7 +33,7 @@ def create_app(db_url=None):
 
     api = Api(app)
     
-    app.config["JWT_SECRET_KEY"] = "suraj_change_this"
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRETKEY")
     jwt = JWTManager(app)
     
     @jwt.needs_fresh_token_loader
